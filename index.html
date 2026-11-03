@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>KWSP Guru - Unjuran Simpanan & Persaraan</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-16 sm:pb-0">
+  
+  <!-- Ambient Gradient Background -->
+  <div class="fixed top-[-60px] left-1/2 -translate-x-1/2 w-[320px] sm:w-[650px] h-[220px] sm:h-[350px] bg-gradient-to-tr from-blue-700/20 via-indigo-600/15 to-transparent blur-[80px] sm:blur-[120px] pointer-events-none -z-10"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-[#050507]/85 border-b border-white/[0.08]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/25 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-white leading-tight">
+            KWSP Guru
+          </h1>
+          <p class="text-[10px] sm:text-[11px] text-neutral-400 font-normal truncate max-w-[170px] sm:max-w-none">Kalkulator TBBK & Pencen Dividen</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-export-csv" class="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium rounded-full bg-white/10 hover:bg-white/15 active:bg-white/20 text-neutral-200 border border-white/10 flex items-center gap-1.5 transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          <span class="hidden sm:inline">Eksport</span> CSV
+        </button>
+        <button onclick="window.print()" class="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold rounded-full bg-white text-black hover:bg-neutral-200 active:bg-neutral-300 flex items-center gap-1 transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          <span class="hidden sm:inline">Cetak</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-3.5 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-8 flex-grow w-full">
+    
+    <!-- Hero Title -->
+    <div class="text-center max-w-2xl mx-auto space-y-2 px-1">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> Skim TBBK Guru (8:8:6:3)
+      </span>
+      <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+        Unjuran KWSP & <br class="sm:hidden" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">Pencen Dividen Guru</span>
+      </h2>
+      <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed">
+        Kiraan kenaikan pangkat DG41 hingga DG54 dengan elaun rasmi dan simulasi aliran tunai sebulan masa bersara.
+      </p>
+    </div>
+
+    <!-- Parameter Controls (Mobile Bento / Finger-friendly) -->
+    <div class="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3.5">
+      <div class="text-xs font-semibold uppercase tracking-wider text-neutral-400 flex items-center justify-between">
+        <span>Tetapan Simulasi</span>
+        <span class="text-[10px] text-blue-400 font-normal">Kemas kini automatik</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- Dividen Slider -->
+        <div class="glass-card-subtle p-3.5 rounded-xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-neutral-300 font-medium">Dividen Tahunan</span>
+            <div class="flex items-center gap-1 bg-white/10 px-2.5 py-0.5 rounded-lg border border-white/10">
+              <input type="number" id="dividend-input" step="0.1" min="1" max="10" value="5.5" class="w-11 bg-transparent text-right font-bold text-xs sm:text-sm text-white focus:outline-none" />
+              <span class="text-xs text-neutral-400">%</span>
+            </div>
+          </div>
+          <input type="range" id="dividend-slider" min="2.0" max="8.0" step="0.1" value="5.5" class="w-full accent-blue-500 cursor-pointer" />
+          <div class="flex justify-between items-center text-[10px] text-neutral-500 font-mono">
+            <span>2.0%</span>
+            <div class="flex gap-1.5">
+              <button onclick="adjustDividend(-0.5)" class="px-1.5 py-0.5 rounded bg-white/5 active:bg-white/20 text-neutral-300">-0.5</button>
+              <button onclick="adjustDividend(0.5)" class="px-1.5 py-0.5 rounded bg-white/5 active:bg-white/20 text-neutral-300">+0.5</button>
+            </div>
+            <span>8.0%</span>
+          </div>
+        </div>
+
+        <!-- Caruman Sukarela Slider -->
+        <div class="glass-card-subtle p-3.5 rounded-xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-neutral-300 font-medium">Caruman Sukarela</span>
+            <div class="flex items-center gap-1 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+              <span class="text-[11px] text-neutral-400">RM</span>
+              <input type="number" id="voluntary-input" step="50" min="0" max="3000" value="0" class="w-14 bg-transparent text-right font-bold text-xs sm:text-sm text-white focus:outline-none" />
+            </div>
+          </div>
+          <input type="range" id="voluntary-slider" min="0" max="2000" step="50" value="0" class="w-full accent-amber-500 cursor-pointer" />
+          <div class="flex justify-between items-center text-[10px] text-neutral-500 font-mono">
+            <span>RM 0</span>
+            <div class="flex gap-1">
+              <button onclick="setVoluntary(100)" class="px-1.5 py-0.5 rounded bg-white/5 active:bg-white/20 text-neutral-300">+100</button>
+              <button onclick="setVoluntary(300)" class="px-1.5 py-0.5 rounded bg-white/5 active:bg-white/20 text-neutral-300">+300</button>
+              <button onclick="setVoluntary(500)" class="px-1.5 py-0.5 rounded bg-white/5 active:bg-white/20 text-neutral-300">+500</button>
+            </div>
+            <span>RM 2k</span>
+          </div>
+        </div>
+
+        <!-- Syer & Umur Bersara -->
+        <div class="glass-card-subtle p-3.5 rounded-xl flex flex-col justify-between space-y-2.5">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-neutral-300 font-medium">Syer Pekerja</span>
+            <div class="inline-flex rounded-lg bg-black/50 p-0.5 border border-white/10">
+              <button id="toggle-rate-9" class="px-2.5 py-1 text-xs rounded-md text-neutral-400 font-medium transition-all">9%</button>
+              <button id="toggle-rate-11" class="px-2.5 py-1 text-xs rounded-md bg-blue-600 text-white font-medium shadow-sm transition-all">11%</button>
+            </div>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-white/[0.05]">
+            <span class="text-xs text-neutral-300 font-medium">Umur Bersara</span>
+            <select id="retire-age-select" class="bg-white/10 text-xs font-semibold text-white px-2.5 py-1 rounded-lg border border-white/10 focus:outline-none cursor-pointer">
+              <option value="55" class="bg-[#121216] text-white">55 Thn</option>
+              <option value="58" class="bg-[#121216] text-white">58 Thn</option>
+              <option value="60" selected class="bg-[#121216] text-white">60 Thn (Pilihan)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apple Bento Summary Metrics -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+      <div class="col-span-2 sm:col-span-1 glass-card p-4 rounded-2xl relative overflow-hidden">
+        <div class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-0.5">Total Simpanan (Umur <span class="retire-age-label">60</span>)</div>
+        <div class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight" id="metric-total-kwsp">RM 0</div>
+        <div class="mt-1.5 flex items-center gap-1 text-[11px] text-blue-400 font-medium">
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          <span id="metric-dividend-share">0% Dividen Kompaun</span>
+        </div>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl">
+        <div class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-0.5">Modal Caruman</div>
+        <div class="text-lg sm:text-xl md:text-2xl font-bold text-neutral-100 tracking-tight" id="metric-total-deposit">RM 0</div>
+        <div class="mt-1.5 text-[10px] sm:text-[11px] text-neutral-400 truncate" id="metric-voluntary-total">+ RM 0 Sukarela</div>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl">
+        <div class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-0.5">Dividen Terkumpul</div>
+        <div class="text-lg sm:text-xl md:text-2xl font-bold text-emerald-400 tracking-tight" id="metric-total-dividend">RM 0</div>
+        <div class="mt-1.5 text-[10px] sm:text-[11px] text-neutral-400">Faedah Kompaun</div>
+      </div>
+
+      <div class="col-span-2 sm:col-span-1 glass-card p-4 rounded-2xl">
+        <div class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-0.5">Gaji Kasar Akhir (DG54)</div>
+        <div class="text-lg sm:text-xl md:text-2xl font-bold text-purple-300 tracking-tight" id="metric-final-salary">RM 0</div>
+        <div class="mt-1.5 text-[10px] sm:text-[11px] text-neutral-400">Elaun DG54: RM 2,000</div>
+      </div>
+    </div>
+
+    <!-- RETIREMENT CASHFLOW / "PENCEN DIVIDEN" CARD -->
+    <div class="bg-gradient-to-tr from-blue-950/40 via-indigo-950/20 to-neutral-900/40 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-blue-500/25 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-1">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Konsep "Pencen Dividen" Bulanan
+          </span>
+          <h3 class="text-lg sm:text-2xl font-bold text-white tracking-tight">Berapa Boleh Guna Sebulan Selepas Bersara?</h3>
+        </div>
+      </div>
+
+      <!-- Segmented Buttons (Responsive touch bar) -->
+      <div class="grid grid-cols-3 gap-1 bg-black/50 p-1 rounded-xl border border-white/10">
+        <button data-cashflow-mode="preserve" class="cashflow-btn px-2 py-2 text-center text-[10px] sm:text-xs font-semibold rounded-lg bg-blue-600 text-white transition-all">
+          Kekal Modal
+        </button>
+        <button data-cashflow-mode="swr4" class="cashflow-btn px-2 py-2 text-center text-[10px] sm:text-xs font-medium text-neutral-400 hover:text-white rounded-lg transition-all">
+          Kadar 4%
+        </button>
+        <button data-cashflow-mode="annuity20" class="cashflow-btn px-2 py-2 text-center text-[10px] sm:text-xs font-medium text-neutral-400 hover:text-white rounded-lg transition-all">
+          Anuiti 20 Thn
+        </button>
+      </div>
+
+      <!-- Cashflow Display Box -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-2">
+        <div class="bg-black/40 p-3.5 sm:p-4 rounded-xl border border-white/5">
+          <span class="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium" id="cashflow-monthly-label">Dividen Sebulan (Modal Kekal)</span>
+          <div class="my-1.5 flex items-baseline gap-1">
+            <span class="text-2xl sm:text-3xl font-extrabold text-emerald-400 tracking-tight" id="cashflow-monthly-value">RM 0</span>
+            <span class="text-xs text-neutral-400">/ bln</span>
+          </div>
+          <p class="text-[10px] text-neutral-400" id="cashflow-monthly-desc">Modal pokok KWSP tidak diusik.</p>
+        </div>
+
+        <div class="bg-black/40 p-3.5 sm:p-4 rounded-xl border border-white/5">
+          <span class="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium">Pengeluaran Setahun</span>
+          <div class="my-1.5 flex items-baseline gap-1">
+            <span class="text-2xl sm:text-3xl font-bold text-white tracking-tight" id="cashflow-annual-value">RM 0</span>
+            <span class="text-xs text-neutral-400">/ thn</span>
+          </div>
+          <p class="text-[10px] text-neutral-400">Dividen: <span id="cashflow-dividend-rate">5.5%</span>.</p>
+        </div>
+
+        <div class="bg-black/40 p-3.5 sm:p-4 rounded-xl border border-white/5">
+          <span class="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium">Nisbah Ganti Gaji</span>
+          <div class="my-1.5 flex items-baseline gap-1">
+            <span class="text-2xl sm:text-3xl font-bold text-indigo-300 tracking-tight" id="cashflow-replacement-ratio">0%</span>
+            <span class="text-[10px] text-neutral-400">gaji bersih akhir</span>
+          </div>
+          <p class="text-[10px] text-neutral-400">Sasaran selesa: 60% – 70%.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pecahan 3 Akaun KWSP -->
+    <div class="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-white">Pecahan 3 Akaun KWSP</h3>
+          <p class="text-[10px] sm:text-[11px] text-neutral-400">Nisbah simpanan umur bersara</p>
+        </div>
+        <span class="text-[10px] font-mono text-neutral-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10">75% | 15% | 10%</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+        <div class="p-3 rounded-xl bg-blue-500/[0.08] border border-blue-500/20 flex justify-between sm:flex-col items-center sm:items-start">
+          <div>
+            <span class="text-[11px] text-blue-400 font-medium block">Akaun Persaraan (75%)</span>
+            <span class="text-[10px] text-neutral-400">Akaun 1 (Umur 55/60)</span>
+          </div>
+          <div class="text-base sm:text-lg font-bold text-white mt-1" id="account-persaraan">RM 0</div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-indigo-500/[0.08] border border-indigo-500/20 flex justify-between sm:flex-col items-center sm:items-start">
+          <div>
+            <span class="text-[11px] text-indigo-300 font-medium block">Akaun Sejahtera (15%)</span>
+            <span class="text-[10px] text-neutral-400">Akaun 2 (Pra-persaraan)</span>
+          </div>
+          <div class="text-base sm:text-lg font-bold text-white mt-1" id="account-sejahtera">RM 0</div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-emerald-500/[0.08] border border-emerald-500/20 flex justify-between sm:flex-col items-center sm:items-start">
+          <div>
+            <span class="text-[11px] text-emerald-400 font-medium block">Akaun Fleksibel (10%)</span>
+            <span class="text-[10px] text-neutral-400">Akaun 3 (Kecemasan)</span>
+          </div>
+          <div class="text-base sm:text-lg font-bold text-white mt-1" id="account-fleksibel">RM 0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+        <h3 class="text-sm sm:text-base font-bold text-white">Lengkok Pertumbuhan Simpanan</h3>
+        <div class="flex items-center gap-3 text-[10px] sm:text-[11px]">
+          <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Total Baki</div>
+          <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span> Modal Mandatori</div>
+          <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Sukarela</div>
+        </div>
+      </div>
+      <div class="h-[230px] sm:h-[320px] w-full">
+        <canvas id="growthChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Mobile-First Table & Card Switcher -->
+    <div class="glass-card rounded-2xl sm:rounded-3xl overflow-hidden space-y-0">
+      
+      <!-- Table Header & Controls -->
+      <div class="p-4 border-b border-white/[0.08] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-white">Unjuran Tahunan (TBBK 8:8:6:3)</h3>
+          <p class="text-[10px] sm:text-[11px] text-neutral-400">Pecahan gaji pokok, elaun dan caruman</p>
+        </div>
+
+        <div class="flex items-center justify-between w-full sm:w-auto gap-2">
+          <!-- Mobile View Switcher (Kad vs Jadual) -->
+          <div class="sm:hidden inline-flex rounded-lg bg-black/60 p-0.5 border border-white/10 mobile-view-tabs">
+            <button id="view-mode-card" class="px-2.5 py-1 text-[11px] rounded-md bg-blue-600 text-white font-medium transition-all">Kad</button>
+            <button id="view-mode-table" class="px-2.5 py-1 text-[11px] rounded-md text-neutral-400 font-medium transition-all">Jadual</button>
+          </div>
+
+          <!-- Grade Filter -->
+          <select id="grade-filter" class="bg-white/10 text-xs text-white px-2.5 py-1.5 rounded-xl border border-white/10 focus:outline-none">
+            <option value="ALL">Semua Gred (DG41 - 54)</option>
+            <option value="DG41">DG41 (8 Thn)</option>
+            <option value="DG44">DG44 (8 Thn)</option>
+            <option value="DG48">DG48 (6 Thn)</option>
+            <option value="DG52">DG52 (3 Thn)</option>
+            <option value="DG54">DG54 (Hingga Bersara)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- VIEW 1: Mobile Friendly Card List (Default on phones) -->
+      <div id="mobile-cards-container" class="sm:hidden p-3 space-y-2.5 max-h-[480px] overflow-y-auto">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- VIEW 2: Traditional Full Table (Sticky Header & Left Col) -->
+      <div id="desktop-table-container" class="hidden sm:block overflow-x-auto max-h-[460px] scrollbar-thin">
+        <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
+          <thead class="sticky top-0 bg-[#0c0c10]/95 backdrop-blur-md text-neutral-400 uppercase text-[10px] tracking-wider border-b border-white/10 z-20">
+            <tr>
+              <th class="py-2.5 px-3 sticky-col">Umur / Gred</th>
+              <th class="py-2.5 px-3">Gaji Pokok</th>
+              <th class="py-2.5 px-3">Elaun</th>
+              <th class="py-2.5 px-3 font-semibold text-neutral-200">Gaji Kasar</th>
+              <th class="py-2.5 px-3">Gaji Bersih</th>
+              <th class="py-2.5 px-3">Majikan (Thn)</th>
+              <th class="py-2.5 px-3">Pekerja (Thn)</th>
+              <th class="py-2.5 px-3">Sukarela (Thn)</th>
+              <th class="py-2.5 px-3 text-emerald-400">Dividen</th>
+              <th class="py-2.5 px-3 font-bold text-white text-right">Baki KWSP</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-white/[0.04] text-neutral-300 font-mono text-xs">
+            <!-- Dynamic rows generated by script.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footnote -->
+      <div class="p-3 bg-white/[0.01] border-t border-white/[0.05] text-[10px] text-neutral-500 space-y-0.5">
+        <div>* Elaun: DG41 (RM900), DG44 (RM1,100), DG48 (RM1,550), DG52 (RM1,600), DG54 (RM2,000).</div>
+        <div>* KGT: DG41 (RM225), DG44 (RM250), DG48 (RM270), DG52 (RM290), DG54 (RM320).</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Sticky Bottom Quick Summary Bar (Only on Mobile for quick glance) -->
+  <div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#09090e]/95 backdrop-blur-xl border-t border-white/10 px-4 py-2 flex items-center justify-between">
+    <div>
+      <span class="text-[9px] uppercase tracking-wider text-neutral-400 block">Baki Umur <span class="retire-age-label">60</span></span>
+      <span class="text-sm font-bold text-white" id="bar-total-kwsp">RM 0</span>
+    </div>
+    <div class="text-right">
+      <span class="text-[9px] uppercase tracking-wider text-emerald-400 block">Pencen Dividen/Bln</span>
+      <span class="text-sm font-bold text-emerald-400" id="bar-monthly-dividend">RM 0</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/[0.08] bg-[#050507] py-5 text-center text-[10px] sm:text-xs text-neutral-500">
+    <div class="max-w-6xl mx-auto px-4 space-y-1">
+      <p>Disclaimer: Ini adalah simulasi anggaran KWSP Guru dibangunkan mengikut jadual skim TBBK.</p>
+      <p class="text-neutral-600">by : Aiman Pokmang Kumang.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
